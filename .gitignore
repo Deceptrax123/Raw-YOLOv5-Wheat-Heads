@@ -13,6 +13,9 @@ wandb/
 #Dataset
 train/
 annotations/
+images/
+labels/
+wheat_head_dataset/
 
 #yolov5
 yolov5/.github/
