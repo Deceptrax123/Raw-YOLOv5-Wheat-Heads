@@ -13,9 +13,9 @@ wandb/
 #Dataset
 train/
 
-#Weights
-trained_weights/
-yolov5s.pt
+#yolov5
+yolov5/.github/
+yolov5/
 
 # Thumbnails
 ._*
