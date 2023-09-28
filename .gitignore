@@ -7,11 +7,15 @@
 # Icon must end with two \r
 Icon
 
+#Weights and Biases
+wandb/
+
 #Dataset
 train/
 
 #Weights
 trained_weights/
+yolov5s.pt
 
 # Thumbnails
 ._*

@@ -19,7 +19,7 @@ def train_epoch():
 
     for step,(sample,y_box) in enumerate(train_loader):
         sample=sample.to(device=device)
-        box=box.to(device=device)
+        y_box=y_box.to(device=device)
 
         #get bounding box predictions
         predictions_box=model(sample)

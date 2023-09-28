@@ -35,19 +35,22 @@ class WheatDataset(Dataset):
         normalize_transform=T.Normalize(mean=mean_img,std=std_img)
         image_tensor_normalized=normalize_transform(image_tensor)
 
-        #refine Y
-        boxes_string=bounding_box_coords.split(";")
+        if bounding_box_coords!='no_box':
+            #refine Y
+            boxes_string=bounding_box_coords.split(";")
 
-        #create arrays of boxes
+            #create arrays of boxes
 
-        boxes=list()
-        for i in boxes_string:
-            coords=i.split()
-            boxes.append(coords)
-        boxes_np=np.array(boxes)
-        boxes_np=boxes_np.astype(np.float32)
+            boxes=list()
+            for i in boxes_string:
+                coords=i.split()
+                boxes.append(coords)
+            boxes_np=np.array(boxes)
+            boxes_np=boxes_np.astype(np.float32)
 
-        boxes_tensor=torch.tensor(boxes_np)
+            boxes_tensor=torch.tensor(boxes_np)
+        else:
+            boxes_tensor=torch.zeros((0,4),dtype=torch.float32)
 
 
         return image_tensor_normalized,boxes_tensor
