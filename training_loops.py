@@ -43,10 +43,8 @@ if __name__=='__main__':
     train_loader=DataLoader(train_set,**params_train)
     test_loader=DataLoader(test_set,**params_test)
 
-    #test the dataloader
-    #print(train)
-    for i,(img,box) in enumerate(train_loader):
-        print(box)
 
-        if i==0:
-            break
+    #load yolov5
+    model=torch.hub.load("ultralytics/yolov5",'yolov5s',autoshape=False,pretrained=False)
+
+    
