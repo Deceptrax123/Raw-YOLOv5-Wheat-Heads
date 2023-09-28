@@ -11,6 +11,7 @@ import gc
 from sklearn.model_selection import train_test_split
 import pandas as pd 
 import numpy as np
+import torchvision.ops as O
 
 
 def train_epoch():
@@ -37,13 +38,61 @@ def train_epoch():
         del predictions_box
         del box_losses
         mps.empty_cache()
+    
+    mean_loss=epoch_loss/train_steps
 
+    return mean_loss
+
+def test_epoch():
+    loss=0
+
+    for step,(sample,y_box) in enumerate(test_loader):
+        sample=sample.to(device=device)
+        y_box=y_box.to(device=device)
+
+        #evaluate test split
+        predictions_box=model(y_box)
+
+        test_loss=O.generalized_box_iou(predictions_box,y_box)
+
+        test_loss=torch.mean(test_loss)
+        loss+=test_loss.item()
+
+        #Memory Management
+        del predictions_box
+        del test_loss
+        del sample
+        del y_box
+
+        mps.empty_cache()
+    
+    mean_loss=loss/test_steps
+
+    return mean_loss
 
 def training_loop():
     for epoch in range(NUM_EPOCHS):
         model.train(True)
+        train_loss=train_epoch()
+        
+        model.eval()
 
+        with torch.no_grad():
+            test_loss=test_epoch()
+            print("Epoch {epoch}".format(epoch=epoch+1))
+            print("Train Bounding Box Loss : {tloss}".format(tloss=train_loss))
+            print("Test Bounding Box IOU {test_loss}".format(test_loss=test_loss))
 
+            wandb.log({
+                "Train Box Loss":train_loss,
+                "Test Box IOU":test_loss,
+                }
+            )
+
+        #checkpoints
+        if (epoch+1)%10==0:
+            path="./trained_weights/yolov5/run_1/model{epoch}.pth".format(epoch=epoch+1)
+            torch.save(model.state_dict(),path)
 
 
 
@@ -95,7 +144,7 @@ if __name__=='__main__':
     #Hyperparameters
     LR=0.01
     BETAS=(0.9,0.999)
-    NUM_EPOCHS=300
+    NUM_EPOCHS=20
 
     #load yolov5
     model=torch.hub.load("ultralytics/yolov5",'yolov5s',autoshape=False,pretrained=True).to(device=device)
@@ -106,5 +155,7 @@ if __name__=='__main__':
     train_steps=(len(train)+params_train['batch_size']-1)//params_train['batch_size']
     test_steps=(len(test)+params_test['batch_size']-1)//params_test['batch_size']
 
-    #Loss function
-    bbox_loss=nn.L1Loss()
+    #Loss functions
+    bbox_loss=nn.SmoothL1Loss()
+
+    training_loop()
