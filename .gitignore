@@ -12,6 +12,7 @@ wandb/
 
 #Dataset
 train/
+annotations/
 
 #yolov5
 yolov5/.github/
