@@ -73,19 +73,19 @@ def prepare_for_yolov5(data_details):
 
         class_id=mapping[box['class']]
         #Transform to yolo v5 format
-        box_center_x=(box['xmin'])+(box['xmax'])/2
-        box_center_y=(box['ymin']+box['ymax'])/2
+        box_center_x=((box['xmin'])+(box['xmax']))/2
+        box_center_y=((box['ymin']+box['ymax']))/2
         box_width=box['xmax']-box['xmin']
         box_height=box['ymax']-box['ymin']
 
         h,w,c=data_details['image_size']
 
-        box_center_x=box_center_x/h
-        box_center_y=box_center_y/w
-        box_width=box_width/h
-        box_height=box_height/w
+        box_center_x=box_center_x/w
+        box_center_y=box_center_y/h
+        box_width=box_width/w
+        box_height=box_height/h
 
-        file_list.append("{} {:.3f} {:.3f} {:.3f}".format(class_id,box_center_x,box_center_y,box_width,box_height))
+        file_list.append("{} {:.3f} {:.3f} {:.3f} {:.3f}".format(class_id,box_center_x,box_center_y,box_width,box_height))
     
     #save the coordinates to a text file as required by Yolo v5
     file_name="./annotations/"+data_details['filename'].replace("png","txt")
