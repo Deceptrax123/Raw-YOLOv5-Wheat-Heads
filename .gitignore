@@ -12,10 +12,14 @@ wandb/
 
 #Dataset
 train/
+test/
 annotations/
 images/
 labels/
 wheat_head_dataset/
+
+#Submissions
+submissions/
 
 #yolov5
 yolov5/wheat_head_dataset

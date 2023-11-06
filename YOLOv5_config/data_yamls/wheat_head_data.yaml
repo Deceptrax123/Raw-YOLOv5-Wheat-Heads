@@ -1,0 +1,7 @@
+train: ../wheat_head_dataset/images/train
+val: ../wheat_head_dataset/images/val
+test: ../wheat_head_dataset/images/test
+
+nc: 2
+
+names: ["background","wheat_head"]
