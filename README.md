@@ -1,6 +1,6 @@
 # YOLOv5
 
-This repository is a part of Negative-Transfer-Mitigation. It contains various
+This repository is a part of <a href="https://github.com/Deceptrax123/Negative-Transfer-Mitigation">Negative-Transfer-Mitigation</a>. It contains various
 config and helper files required to train a custom YOLOv5 model using Ultralytics and test
 the results on AI Crowd. 
 
