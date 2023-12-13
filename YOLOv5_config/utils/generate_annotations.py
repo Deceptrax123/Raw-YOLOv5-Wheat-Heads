@@ -13,14 +13,14 @@ mapping={
 }
 
 def create_dict():
-    data=pd.read_csv("./train/train.csv")
+    data=pd.read_csv("train/train.csv")
 
     image_names=data['image_name']
     box_coords=data['BoxesString']
 
     data_dict=dict(zip(image_names,box_coords))
 
-    global_path="./train/train/"
+    global_path="train/train/"
     
     data_details=list()
     for i,key in enumerate(data_dict):
@@ -59,18 +59,13 @@ def create_dict():
             'image_size':img_np.shape,
         }
 
-        data_details.append(image_dict)
-
-        if i==0:
-            break
-
-    return data_details
+        prepare_for_yolov5(image_dict)
 
 def prepare_for_yolov5(data_details):
 
     file_list=list()
     for box in data_details['bboxes']:
-
+    
         class_id=mapping[box['class']]
         #Transform to yolo v5 format
         box_center_x=((box['xmin'])+(box['xmax']))/2
@@ -88,7 +83,7 @@ def prepare_for_yolov5(data_details):
         file_list.append("{} {:.3f} {:.3f} {:.3f} {:.3f}".format(class_id,box_center_x,box_center_y,box_width,box_height))
     
     #save the coordinates to a text file as required by Yolo v5
-    file_name="./annotations/"+data_details['filename'].replace("png","txt")
+    file_name="annotations/"+data_details['filename'].replace("png","txt")
     
     #write annotations to file
     with open(file_name,'w') as f:
@@ -98,3 +93,5 @@ def prepare_for_yolov5(data_details):
             if i!=len(file_list)-1:
                 f.write("\n")
         f.close()
+
+create_dict()
